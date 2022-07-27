@@ -52,8 +52,8 @@ pipeline {
                                   doGenerateSubmoduleConfigurations: false, 
                                   extensions: [],
                                   gitTool: 'Default', 
-                                  submoduleCfg: [[credentialsId: 'jenkins']], 
-                                  userRemoteConfigs: [[url: "${githubUrl}" , credentialsId: 'jenkins']]
+                                  submoduleCfg: [[credentialsId: '1']], 
+                                  userRemoteConfigs: [[url: "${githubUrl}" , credentialsId: '1']]
                                 ])
 		       }
 	          }
