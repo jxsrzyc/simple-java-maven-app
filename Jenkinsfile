@@ -44,17 +44,21 @@ pipeline {
         //下载代码
         stage("GetCode"){ //阶段名称
 	    steps {
-               tools.PrintMes("拉取代码","green")
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: "${params.BRANCH}"]], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [],
-                          gitTool: 'Default', 
-                          submoduleCfg: [[credentialsId: 'jenkins']], 
-                          userRemoteConfigs: [[url: "${githubUrl}" , credentialsId: 'jenkins']]
-                        ])
-                }
-            }
+	       timeout(time:20, unit:"MINUTES"){   //步骤超时时间
+	           script{ //项目构建
+                       tools.PrintMes("拉取代码","green")
+                        checkout([$class: 'GitSCM', 
+                                  branches: [[name: "${params.BRANCH}"]], 
+                                  doGenerateSubmoduleConfigurations: false, 
+                                  extensions: [],
+                                  gitTool: 'Default', 
+                                  submoduleCfg: [[credentialsId: 'jenkins']], 
+                                  userRemoteConfigs: [[url: "${githubUrl}" , credentialsId: 'jenkins']]
+                                ])
+		       }
+	          }
+             }
+        }
         stage("Build"){ //阶段名称
             steps{  //步骤
                 timeout(time:20, unit:"MINUTES"){   //步骤超时时间
