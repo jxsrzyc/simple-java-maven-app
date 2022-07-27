@@ -10,6 +10,8 @@ String buildEnv = "${env.buildEnv}"
 String buildType = "${env.buildType}"
 String buildShell = "${env.buildShell}"
 
+String githubUrl = "${env.githubUrl}"
+
 pipeline {
     agent { node {  label "master"   //指定运行节点的标签或者名称
                     //customWorkspace "${workspace}"   //指定运行工作目录（可选）
@@ -41,16 +43,18 @@ pipeline {
     //    }
         //下载代码
         stage("GetCode"){ //阶段名称
-            when { environment name: 'buildEnv', value: 'prod' }
-            steps{  //步骤
-                timeout(time:5, unit:"MINUTES"){   //步骤超时时间
-                    script{ //填写运行代码
-                        println("构建环境：${buildEnv}")
-                        println('获取代码')
-                    }
+	    steps {
+               tools.PrintMes("拉取代码","green")
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: "${params.BRANCH}"]], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [],
+                          gitTool: 'Default', 
+                          submoduleCfg: [[credentialsId: 'Jenkins']], 
+                          userRemoteConfigs: [[url: "${githubUrl}" , credentialsId: 'Jenkins']]
+                        ])
                 }
             }
-        }
         stage("Build"){ //阶段名称
             steps{  //步骤
                 timeout(time:20, unit:"MINUTES"){   //步骤超时时间
@@ -69,8 +73,7 @@ pipeline {
                 timeout(time:30, unit:"MINUTES"){   //步骤超时时间
                     script{ //代码扫描 
                         println('代码扫描')
-						
-						tools.PrintMes("this is my lib","green")
+			tools.PrintMes("this is my lib","green")
                     }
                 }
             }
