@@ -24,9 +24,12 @@ pipeline {
         disableConcurrentBuilds() //禁止并行
         timeout(time: 1, unit: 'HOURS')  //流水线超时设置1h
     }
-    
+   
     //parameters { string(name: 'DEPLOY_ENV', defaultValue: 'prod', description: '') }
-        
+    parameters {
+        gitParameter branch: '', branchFilter: 'origin/(.*)', defaultValue: 'master', description: '选择你要的分支', name: 'BRANCH', quickFilterEnabled: 'true', selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH', useRepository: '${githubUrl}'
+    }	
+	
     stages {
     //    stage('Example') {
     //        input {
